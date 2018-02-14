@@ -15,6 +15,7 @@ cameraNode.camera = SCNCamera()
 cameraNode.position = SCNVector3(x:0, y:2, z:8)
 scene.rootNode.addChildNode(cameraNode)
 sceneView.pointOfView = cameraNode
+scene.physicsWorld.gravity = SCNVector3(0,-9.8,0)
 
 //Add Light
 let omnidirectionalLightNode = SCNNode()
@@ -39,8 +40,13 @@ geometry.firstMaterial?.diffuse.contents = UIColor.red
 let boxNode = SCNNode(geometry: geometry)
 //Add Physics
 boxNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: SCNPhysicsShape(geometry: geometry, options: nil))
+boxNode.physicsBody?.mass = 3
 //Add Node to Scene
 sceneView.scene?.rootNode.addChildNode(boxNode)
-
-//Do 1 action
-boxNode.runAction(SCNAction.rotateBy(x: 0, y: CGFloat.pi, z: 0, duration: 5))
+//Create Force
+let randomDirection: Float = arc4random_uniform(2) == 0 ? -1.0 : 1.0
+let force = SCNVector3Make(randomDirection,
+						   CFloat(50),
+						   randomDirection)
+// Apply Vector3 force to node
+boxNode.physicsBody?.applyForce(force, at: SCNVector3(), asImpulse: true)
