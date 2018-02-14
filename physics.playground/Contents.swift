@@ -50,3 +50,6 @@ let force = SCNVector3Make(randomDirection,
 						   randomDirection)
 // Apply Vector3 force to node
 boxNode.physicsBody?.applyForce(force, at: SCNVector3(), asImpulse: true)
+
+// Make camera look at box
+cameraNode.constraints = [SCNLookAtConstraint(target: boxNode)]
